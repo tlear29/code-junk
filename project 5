@@ -1,0 +1,117 @@
+# Todd Lear
+# CIS261
+# Course Project Phase 2
+
+# New function for Phase 2 to get pay period dates
+def get_dates_worked():
+    """Gets the pay period start and end dates from the user."""
+    from_date = input("Enter the start date for the pay period (mm/dd/yyyy): ")
+    to_date = input("Enter the end date for the pay period (mm/dd/yyyy): ")
+    return from_date, to_date
+
+# --- Functions from your Phase 1 code (with minor name adjustments for clarity) ---
+def get_employee_name():
+    return input("Enter employee name (or 'End' to finish): ")
+
+def get_total_hours():
+    return float(input("Enter total hours worked: "))
+
+def get_hourly_rate():
+    return float(input("Enter hourly rate: "))
+
+def get_income_tax_rate():
+    return float(input("Enter income tax rate (e.g., 0.2 for 20%): "))
+
+# New function for Phase 2 to process the list of employees
+def process_and_display_payroll(employee_list):
+    """Iterates through a list of employees, displays details, and calculates totals."""
+    # Initialize totals
+    total_employees = 0
+    total_hours_all = 0.0
+    total_gross_pay_all = 0.0
+    total_income_tax_all = 0.0
+    total_net_pay_all = 0.0
+
+    print("\n********* Employee Payroll Details *********")
+    # Loop through the list of stored employee data
+    for emp_data in employee_list:
+        # Unpack the data for each employee
+        from_date, to_date, emp_name, total_hours, hourly_rate, tax_rate = emp_data
+
+        # Calculate payroll for the current employee
+        gross_pay = total_hours * hourly_rate
+        income_tax = gross_pay * tax_rate
+        net_pay = gross_pay - income_tax
+
+        # Display individual employee details
+        print(f"\n--- Paycheck for: {emp_name} ---")
+        print(f"Pay Period: {from_date} to {to_date}")
+        print(f"Total Hours: {total_hours:.2f}")
+        print(f"Hourly Rate: ${hourly_rate:.2f}")
+        print(f"Gross Pay: ${gross_pay:.2f}")
+        print(f"Income Tax Rate: {tax_rate:.1%}")
+        print(f"Income Tax: ${income_tax:.2f}")
+        print(f"Net Pay: ${net_pay:.2f}")
+
+        # Increment the totals
+        total_employees += 1
+        total_hours_all += total_hours
+        total_gross_pay_all += gross_pay
+        total_income_tax_all += income_tax
+        total_net_pay_all += net_pay
+
+    # Store totals in a dictionary as required by Phase 2
+    totals_dictionary = {
+        "Total Employees": total_employees,
+        "Total Hours": total_hours_all,
+        "Total Gross Pay": total_gross_pay_all,
+        "Total Income Tax": total_income_tax_all,
+        "Total Net Pay": total_net_pay_all
+    }
+    return totals_dictionary
+
+# Modified function to accept and read from the dictionary
+def display_totals(totals_dict):
+    """Displays summary totals from a dictionary."""
+    print("\n--- Payroll Summary ---")
+    print(f"Total Number of Employees: {totals_dict['Total Employees']}")
+    print(f"Total Hours Worked: {totals_dict['Total Hours']:.2f}")
+    print(f"Total Gross Pay: ${totals_dict['Total Gross Pay']:.2f}")
+    print(f"Total Income Taxes: ${totals_dict['Total Income Tax']:.2f}")
+    print(f"Total Net Pay: ${totals_dict['Total Net Pay']:.2f}")
+    print("-----------------")
+
+def main():
+    # List to store all employee data
+    all_employees_data = []
+
+    while True:
+        emp_name = get_employee_name()
+        if emp_name.lower() == 'end':
+            break
+
+        # Per instructions, get_dates_worked() is the first function called in the loop
+        from_date, to_date = get_dates_worked()
+        total_hours = get_total_hours()
+        hourly_rate = get_hourly_rate()
+        tax_rate = get_income_tax_rate()
+
+        # Store all data for one employee in a list
+        employee_record = [from_date, to_date, emp_name, total_hours, hourly_rate, tax_rate]
+        # Add this employee's list to the main list
+        all_employees_data.append(employee_record)
+
+        another = input("\nDo you want to enter another employee? (yes/no): ")
+        if another.lower() != 'yes':
+            break
+
+    # After the loop, if data was entered, process it
+    if all_employees_data:
+        # This function now calculates and displays individual data, and returns the totals dictionary
+        final_totals = process_and_display_payroll(all_employees_data)
+        # This function now reads from the dictionary to display totals
+        display_totals(final_totals)
+    else:
+        print("\nNo employee data was entered.")
+
+# Run the main function
