@@ -1,0 +1,74 @@
+def get_dates():
+    from_date = input("Enter the pay period start date (mm/dd/yyyy): ")
+    to_date = input("Enter the pay period end date (mm/dd/yyyy): ")
+    return from_date, to_date
+
+def get_employee_info():
+    emp_name = input("Enter employee name: ")
+    total_hours = float(input("Enter total hours worked: "))
+    hourly_rate = float(input("Enter hourly rate: "))
+    tax_rate = float(input("Enter income tax rate (e.g., 0.1 for 10%): "))
+    return emp_name, total_hours, hourly_rate, tax_rate
+
+def process_and_display_data(employee_list):
+     totals_dict = {
+         "total_employees": 0
+         "total_hours": 0.0,
+         "total_tax": 0.0,
+         "total_net_pay": 0.0
+    }
+     print("\n--- Employee Payroll Details ---")
+     for emp_record in employee_list:
+         from_date, to_date, emp_name, total_hours, hourly_rate, tax_rate = emp_record 
+
+          gross_pay = total_hours * hourly_rate
+          income_tax = gross_pay * tax_rate
+          net_pay = gross_pay - income_tax
+
+          print(f"\nPay Period: {from_date} to {to_date}")
+          print(f"Employee: {emp_name}")
+          print(f"Hours Worked: {total_hours:.2f}")
+          print(f"Hourly Rate: ${hourly_rate:.2f}")
+          print(f"Gross Pay: ${gross_pay:.2f}")
+          print(f"Income Tax Rate: {tax_rate:.2%}")
+          print(f"Income Tax: ${income_tax:.2f}")
+          print(f"Net Pay: ${net_pay:.2f}")
+
+          totals_dict["total_employees"] += 1
+          totals_dict["total_hours"] += total_hours
+          totals_dict["total_tax"] += income_tax
+          totals_dict["total_net_pay"] += net_pay
+    
+     return totals_dict
+
+def display_totals(totals_dictionary):
+    print("\n--- Payroll Totals ---")
+    print(f"Total Number of Employees: {totals_dictionary['total_employees']}")
+    print(f"Total Hours Worked: {totals_dictionary['total_hours']:.2f}")
+    print(f"Total Income Tax: ${totals_dictionary['total_tax']:.2f}")
+    print(f"Total Net Pay: ${totals_dictionary['total_net_pay']:.2f}")
+
+def main():
+    employee_data = []
+    while True:
+        from_date, to_date = get_dates()
+        emp_name, total_hours, hourly_rate, tax_rate = get_employee_info()
+
+        current_employee_record = [from_date, to_date, emp_name, total_hours, hourly_rate, tax_rate]
+        employee_data.append(current_employee_record)
+
+        another = input("\nDo you want to enter another employee? (y/n): ").lower()
+        if another != 'y':
+            break
+
+    if employee_data:
+        totals = process_and_display_data(employee_data)
+        display_totals(totals)
+    else:
+        print("No employee data was entered.")
+
+
+if __name__ == "__main__":
+    main()
+
+
